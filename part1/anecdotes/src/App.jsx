@@ -12,10 +12,9 @@ const App = () => {
     'The only way to go fast, is to go well.'
   ];
 
-  // State to hold the index of the selected anecdote
   const [selected, setSelected] = useState(0);
-  
-  // State to hold the votes for each anecdote (initialize with zeros)
+
+  // Initialize an array with 0 votes for each anecdote
   const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0));
 
   // Function to select a random anecdote
@@ -24,12 +23,21 @@ const App = () => {
     setSelected(randomIndex);
   };
 
-  // Function to vote for the currently displayed anecdote
+  // Function to vote for the current anecdote
   const voteForAnecdote = () => {
-    const copy = [...votes];  // Create a copy of the votes array
-    copy[selected] += 1;      // Increment the vote for the selected anecdote
-    setVotes(copy);           // Update the state with the new votes array
+    const copy = [...votes];   // Create a copy of the votes array
+    copy[selected] += 1;       // Increment the vote for the selected anecdote
+    setVotes(copy);            // Update the state with the new votes array
   };
+
+  // Function to find the anecdote with the most votes
+  const getTopAnecdote = () => {
+    const maxVotes = Math.max(...votes);              // Find the maximum number of votes
+    const topAnecdoteIndex = votes.indexOf(maxVotes); // Find the index of the anecdote with the most votes
+    return topAnecdoteIndex;
+  };
+
+  const topAnecdoteIndex = getTopAnecdote();
 
   return (
     <div>
@@ -38,6 +46,16 @@ const App = () => {
       <p>Has {votes[selected]} votes</p>
       <button onClick={voteForAnecdote}>Vote</button>
       <button onClick={getRandomAnecdote}>Next Anecdote</button>
+
+      <h1>Anecdote with Most Votes</h1>
+      {votes[topAnecdoteIndex] > 0 ? (
+        <div>
+          <p>{anecdotes[topAnecdoteIndex]}</p>
+          <p>Has {votes[topAnecdoteIndex]} votes</p>
+        </div>
+      ) : (
+        <p>No votes yet</p>
+      )}
     </div>
   );
 };
